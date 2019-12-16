@@ -1,4 +1,4 @@
-from Bankers_Algorithm_ASU19.main import main
+from Bankers_Algorithm_ASU19.main import getSafeSeq
 
 numOfProcess = int(input("Number Of Process ? "))
 numOfResources = int(input("Number Of Resources ? "))
@@ -9,4 +9,4 @@ allocation = [[int(k) for k in input().split()] for i in range(numOfProcess)]
 print("Max:")
 maxResources = [[int(k) for k in input().split()] for i in range(numOfProcess)]
 
-main(numOfProcess, numOfResources, available, allocation, maxResources)
+print(getSafeSeq(numOfProcess, numOfResources, available, allocation, maxResources))

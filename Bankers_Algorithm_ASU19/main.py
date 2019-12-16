@@ -1,3 +1,8 @@
+class NoSafeSeqFoundException(Exception):
+    def __init__(self, processesFinished, availableResources):
+        self.processesFinished = processesFinished
+        self.availableResources = availableResources
+
 def allEqualTrue(inputList):
     for item in inputList:
         if not item:
@@ -10,10 +15,11 @@ def isCurrentHigherThanNeed(current, need):
             return False
     return True
 
-def isInSafeState(numOfProcess, numOfResources, available, allocation, maxResources):
+def getSafeSeq(numOfProcess, numOfResources, available, allocation, maxResources):
     need = [[maxResources[i][j]-allocation[i][j] for j in range(numOfResources)] for i in range(numOfProcess)]
     currentAvailable = available.copy()
     finished = [False for i in range(numOfProcess)]
+    SafeSeq = []
 
     availableIncreased = True
     while availableIncreased:
@@ -23,9 +29,9 @@ def isInSafeState(numOfProcess, numOfResources, available, allocation, maxResour
                 for j in range(numOfResources):
                     currentAvailable[j] += allocation[i][j]
                 finished[i] = True
+                SafeSeq.append(i)
                 availableIncreased = True
-
-    return allEqualTrue(finished)
-
-def main(numOfProcess, numOfResources, available, allocation, maxResources):
-    print(isInSafeState(numOfProcess, numOfResources, available, allocation, maxResources))
+    if len(SafeSeq) == numOfProcess:
+        return SafeSeq
+    else:
+        raise NoSafeSeqFoundException(SafeSeq, currentAvailable)
