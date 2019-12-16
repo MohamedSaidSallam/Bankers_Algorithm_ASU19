@@ -1,0 +1,2 @@
+py -m tests
+pause
