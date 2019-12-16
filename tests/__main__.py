@@ -1,4 +1,4 @@
 import unittest
-from tests.test_bankers import testBankers
+from tests.test_bankers import testGetSafeSeq
 
 unittest.main()
