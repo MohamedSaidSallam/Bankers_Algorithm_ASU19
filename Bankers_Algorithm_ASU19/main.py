@@ -42,6 +42,21 @@ def getSafeSeq(numOfProcess, numOfResources, available, allocation, maxResources
     else:
         raise NoSafeSeqFoundException(SafeSeq, currentAvailable)
 
+def terminateProcess(HighestAllocation, allocation, available, maxResources):
+    for i in range(len(allocation)):
+        available[i] += allocation[HighestAllocation][i]
+    del allocation[HighestAllocation]
+    del maxResources[HighestAllocation]
+
+def getHighestAllocation(allocation):
+    HighestAllocation = 0
+    HighestAllocationSum = sum(allocation[0])
+    for i, alloc in enumerate(allocation):
+        allocSum = sum(alloc)
+        if allocSum > HighestAllocationSum:
+            HighestAllocationSum = allocSum
+            HighestAllocation = i
+    return HighestAllocation
 
 def handleDeadlock(numOfProcess, numOfResources, available, allocation, maxResources):
     processesTerminated = []
@@ -65,21 +80,12 @@ def handleDeadlock(numOfProcess, numOfResources, available, allocation, maxResou
             ]
             available = ex.availableResources
 
-            HighestAllocation = 0
-            HighestAllocationSum = sum(allocation[0])
-            for i, alloc in enumerate(allocation):
-                allocSum = sum(alloc)
-                if allocSum > HighestAllocationSum:
-                    HighestAllocationSum = allocSum
-                    HighestAllocation = i
+            HighestAllocation = getHighestAllocation(allocation)
 
             processesTerminated.append(HighestAllocation)
 
-            for i in range(len(allocation)):
-                available[i] += allocation[HighestAllocation][i]
             numOfProcess -= 1
-            del allocation[HighestAllocation]
-            del maxResources[HighestAllocation]
+            terminateProcess(HighestAllocation, allocation, available, maxResources)
         else:
             inUnsafeState = False
     return processesTerminated
